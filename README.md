@@ -2,6 +2,8 @@
 
 ## Example Taken( YSSV Pre-Built PC Company Chatbot)
 
+![alt text](https://github.com/yash-dhingra/AI_ChatBot/blob/982be15682c6e49184c37336e399eed0b23b0bfa/2024-07-18%2018_49_45-ViShaYa%20Chatbot%20(Ubuntu).png)
+
 ## Running Instructions
 If you'd like to execute the chatbot:
 1. Clone the Git repository.
