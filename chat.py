@@ -5,6 +5,37 @@ import torch
 
 from model import NeuralNet
 from nltk_utils import bag_of_words, tokenize
+import pandas as pd
+from datetime import datetime, timedelta
+
+
+
+# Load the CSV file
+df = pd.read_csv('dummy_orders.csv')
+
+def check_warranty(order_id,bot_name,tag):
+    # Find the order in the dataframe
+    order = df[df['OrderID'] == order_id]
+    
+    if order.empty:
+        print(f"Order ID {order_id} not found.")
+        return
+    
+    # Get the date of purchase
+    date_of_purchase = datetime.strptime(order.iloc[0]['DateOfPurchase'], '%Y-%m-%d')
+    
+    # Calculate the expiry date
+    expiry_date = date_of_purchase + timedelta(days=365)
+    
+    # Check if the warranty is still valid
+    if datetime.now() <= expiry_date:
+        print(f"{bot_name}  Tag({tag}):The warranty for Order ID {order_id} is still valid.")
+    else:
+        print(f"{bot_name}  Tag({tag}):The warranty for Order ID {order_id} has expired.")
+    
+    print(f"{bot_name}  Tag({tag}):Expiry Date: {expiry_date.strftime('%Y-%m-%d')}")
+
+
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -30,7 +61,7 @@ print("Let's chat! (type 'quit' to exit)")
 while True:
     # sentence = "do you use credit cards?"
     sentence = input("You: ")
-    if sentence == "quit":
+    if sentence == "quit" or sentence == "exit" or sentence == "bye" or sentence == "goodbye" or sentence == "NO" or sentence == "no" or sentence == "No":
         break
 
     sentence = tokenize(sentence)
@@ -53,6 +84,7 @@ while True:
             print(f"{bot_name}  Tag({tag}): Great! Let's start by opening the case and checking the connections of the components inside.\n Refer this Image: https://www.google.com/url?sa=i&url=https%3A%2F%2Fin.pinterest.com%2Fpin%2F410742428485532076%2F&psig=AOvVaw0eLukg3XQiX6SQCVAw4RlR&ust=1721244191435000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCJDBurykrIcDFQAAAAAdAAAAABAT")
         else:
             print(f"{bot_name}  Tag({tag}): No worries! Let's Connect you to an executive.")
+            break
 
 
         # Ask if it resolved the issue
@@ -62,6 +94,7 @@ while True:
             print(f"{bot_name}  Tag({tag}): Great! I'm glad I could help you. Is there anything else I can assist you with?")
         else:
             print(f"{bot_name}  Tag({tag}): No worries! Let's Connect you to an executive.")
+            break
 
     elif tag=="windows_not_installed":
         # Ask if the user is comfortable with installing windows
@@ -71,6 +104,7 @@ while True:
             print(f"{bot_name}  Tag({tag}): Great! Let's start by downloading the Windows 10 ISO file from the official Microsoft website.\n Refer this link: https://www.microsoft.com/en-in/software-download/windows10")
         else:
             print(f"{bot_name}  Tag({tag}): No worries! Let's Connect you to an executive.")
+            break
 
 
         # Ask if it resolved the issue
@@ -80,6 +114,7 @@ while True:
             print(f"{bot_name}  Tag({tag}): Great! I'm glad I could help you. Is there anything else I can assist you with?")
         else:
             print(f"{bot_name}  Tag({tag}): No worries! Let's Connect you to an executive.")
+            break
 
 
 
@@ -89,13 +124,15 @@ while True:
         inp=input("You: ")
         print(f"{bot_name}  Tag({tag}): Let me check the warranty status for you.")
         # Check the order.csv file for the warranty status
+        check_warranty(inp,bot_name,tag)
         # TO BE DONE LATER
         print(f"{bot_name}  Tag({tag}): Did this resolve the issue?(Yes or No)")
         inp=input("You: ")
-        if inp=="Yes":
+        if inp=="Yes" or inp=="yes" or inp=="YES" or inp=="y" or inp=="Y":
             print(f"{bot_name}  Tag({tag}): Great! I'm glad I could help you. Is there anything else I can assist you with?")
         else:
             print(f"{bot_name}  Tag({tag}): No worries! Let's Connect you to an executive.")
+            break
     
     elif tag=="noisy_fan" or tag=="damaged_cpu_cabinet_received" or tag=="components_seems_missing" or tag=="cant_register_for_warranty" or tag=="need_help_for_software_setup" :
         # Connect with an executive
